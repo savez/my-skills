@@ -1,20 +1,42 @@
-# 🧠 Prompt Collection
+🛠️ My Skills & AI Agent Workflows
 
-Raccolta di prompt riutilizzabili per developer: sicurezza, refactoring, documentazione, testing, DevOps e altro.
+Benvenuto nel mio repository di Skill & Prompt personalizzati! Questa raccolta contiene la mia personal knowledge base, workflow e configurazioni riutilizzabili per agenti AI (Cursor, Claude Code, GitHub Copilot, Codex, ecc.).
 
-L’obiettivo del repository è fornire prompt strutturati e pronti all’uso, organizzati per categoria.
+📌 Cos'è questo repository?
 
-## 🚀 Utilizzo
+Questo repository serve a:
 
-1. Vai nella cartella prompts/
-2. Scegli un prompt
-3. Copialo nel tuo strumento AI
-4. Aggiungi il contesto del tuo progetto
+Centralizzare i miei workflow: Una collezione di regole, custom instructions e file SKILL.md personalizzati per ottimizzare la collaborazione con agenti coding e assistenti AI.
 
-I risultati devono sempre essere verificati manualmente.
+Showcase e riuso delle competenze: Una mappa aggiornata e un catalogo di istruzioni riutilizzabili per automatizzare task ricorrenti nel processo di sviluppo.
 
-## ➕ Contributi
+⚙️ Come utilizzare queste Skill
 
-1. Aggiungi nuovi prompt in prompts/<categoria>/<nome>.md
-2. Mantieni il formato semplice e riutilizzabile
-3. Apri una Pull Request
+🤖 Per Agentic AI (Claude Code, Cursor, Codex, Gemini CLI)
+
+Puoi installare o collegare direttamente le skill usando la CLI di riferimento o tramite symlink:
+
+# Esempio di clonazione e setup locale
+git clone https://github.com/savez/my-skills.git
+cd my-skills
+./scripts/link-skills.sh # (oppure usa la CLI del tuo agente, es. gh skill / npx skills)
+
+
+💬 Per Chat & Web Interfaces (ChatGPT, Claude.ai)
+
+Puoi importare i file contenuti nella cartella skills/ direttamente come contesto o Knowledge Files all'interno dei tuoi progetti o workspace.
+
+📂 Struttura del Repository
+
+my-skills/
+├── skills/               # Cartella contenente le singole definizioni delle skill (.md)
+│   ├── refactoring/
+│   └── code-review/
+├── .cursor/              # Regole e prompt specifici per Cursor (opzionale)
+├── scripts/              # Script utili di automazione o symlink
+└── README.md             # Questo file
+
+
+🤝 Contatti & Link
+
+GitHub: @savez
