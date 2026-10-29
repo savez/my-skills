@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Testo per LinkedIn</title>
+<meta name="description" content="Formatta il testo dei post LinkedIn con grassetto, corsivo, sottolineato ed elenchi.">
+<meta name="theme-color" content="#2F5D50">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Testo LinkedIn">
+<style>
+  :root {
+    --paper: #E8ECEF;
+    --surface: #FFFFFF;
+    --ink: #17212B;
+    --muted: #5B6875;
+    --line: #CDD5DC;
+    --pine: #2F5D50;
+    --pine-soft: #DCEBE4;
+    --on-pine: #F0F4F1;
+    --focus: #3D7FC4;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #11181F;
+      --surface: #19222B;
+      --ink: #E4EAF0;
+      --muted: #94A2AF;
+      --line: #2C3843;
+      --pine: #7FBFA8;
+      --pine-soft: #1F3530;
+      --on-pine: #0F1D19;
+      --focus: #8CB8E8;
+      color-scheme: dark;
+    }
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    /* Stesso stack di sistema di LinkedIn: i glifi Unicode si vedono qui come là. */
+    font: 16px/1.5 -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 48px; }
+
+  header { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+  h1 { font-size: 1.75rem; line-height: 1.15; margin: 0; letter-spacing: -0.01em; }
+  header p { margin: 4px 0 0; color: var(--muted); max-width: 46ch; }
+
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface); }
+  .seg button { border: 0; background: none; color: var(--muted); font: inherit; font-size: .875rem; padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--pine); color: var(--on-pine); }
+
+  .work { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch; }
+  @media (max-width: 820px) { .work { grid-template-columns: 1fr; } .pane { min-height: 300px; } }
+
+  .pane { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; min-height: 420px; overflow: hidden; }
+  .pane-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px 10px 16px; border-bottom: 1px solid var(--line); min-height: 52px; }
+  .pane-head h2 { font-size: 1rem; margin: 0; }
+
+  .tools { display: flex; gap: 2px; flex-wrap: wrap; }
+  .tools button { min-width: 34px; height: 34px; border: 0; border-radius: 8px; background: none; color: var(--ink); font: inherit; font-size: .95rem; cursor: pointer; padding: 0 8px; }
+  .tools button:hover { background: var(--pine-soft); }
+
+  textarea {
+    flex: 1; width: 100%; resize: none; border: 0; outline: 0; padding: 16px;
+    background: transparent; color: var(--ink); font: inherit; font-size: 1rem; line-height: 1.55;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .92rem;
+  }
+  textarea::placeholder { color: var(--muted); }
+
+  .out { flex: 1; margin: 0; padding: 16px; white-space: pre-wrap; word-break: break-word; font: inherit; font-size: .95rem; line-height: 1.45; overflow: auto; }
+  .out:empty::before { content: "Il testo formattato compare qui mentre scrivi."; color: var(--muted); }
+
+  .pane-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px 10px 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+  .count.over { color: #C0392B; font-weight: 600; }
+
+  .copy { border: 0; border-radius: 999px; background: var(--pine); color: var(--on-pine); font: inherit; font-size: .9rem; font-weight: 600; padding: 8px 18px; cursor: pointer; white-space: nowrap; }
+  .copy.ghost { background: none; color: var(--pine); border: 1px solid var(--line); font-weight: 500; padding: 6px 14px; font-size: .85rem; }
+  .copy.done { background: var(--pine-soft); color: var(--ink); }
+
+  button:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  /* Campionario: è la parte da guardare, quindi ha spazio e niente cornici. */
+  .specimen { margin-top: 40px; }
+  .specimen > h2 { font-size: 1.15rem; margin: 0 0 4px; }
+  .specimen > p { color: var(--muted); margin: 0 0 14px; font-size: .92rem; }
+  .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .rows li { display: grid; grid-template-columns: 11rem 1fr auto; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .rows .name { color: var(--muted); font-size: .85rem; }
+  .rows .sample { font-size: 1.2rem; line-height: 1.35; white-space: pre-wrap; word-break: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  @media (max-width: 620px) {
+    .rows li { grid-template-columns: 1fr auto; gap: 4px 12px; }
+    .rows .name { grid-column: 1 / -1; }
+  }
+
+  details { margin-top: 36px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 4px 16px; }
+  summary { cursor: pointer; padding: 10px 0; font-weight: 600; }
+  .cheat { display: grid; grid-template-columns: max-content 1fr; gap: 6px 18px; margin: 4px 0 14px; font-size: .9rem; }
+  .cheat code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; background: var(--pine-soft); padding: 1px 6px; border-radius: 5px; }
+  .note { color: var(--muted); font-size: .85rem; margin: 0 0 14px; max-width: 70ch; }
+
+  .toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); padding: 8px 16px; border-radius: 999px; font-size: .9rem; opacity: 0; pointer-events: none; transition: opacity .15s; }
+  .toast.show { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>𝗧𝗲𝘀𝘁𝗼 𝗽𝗲𝗿 𝗟𝗶𝗻𝗸𝗲𝗱𝗜𝗻</h1>
+      <p>Scrivi con il markup, copia il testo pronto da incollare nel post.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Famiglia per grassetto e corsivo">
+      <button type="button" data-family="sans" aria-pressed="true">Sans</button>
+      <button type="button" data-family="serif" aria-pressed="false">Con grazie</button>
+    </div>
+  </header>
+
+  <section class="work">
+    <div class="pane">
+      <div class="pane-head">
+        <h2 id="in-label">Scrivi</h2>
+        <div class="tools" role="toolbar" aria-label="Formattazione della selezione">
+          <button type="button" data-wrap="**" title="Grassetto (Ctrl+B)" aria-label="Grassetto"><b>B</b></button>
+          <button type="button" data-wrap="*" title="Corsivo (Ctrl+I)" aria-label="Corsivo"><i>I</i></button>
+          <button type="button" data-wrap="++" title="Sottolineato (Ctrl+U)" aria-label="Sottolineato"><u>U</u></button>
+          <button type="button" data-wrap="~~" title="Barrato" aria-label="Barrato"><s>S</s></button>
+          <button type="button" data-wrap="`" title="Monospazio" aria-label="Monospazio">{ }</button>
+          <button type="button" data-prefix="- " title="Elenco puntato" aria-label="Elenco puntato">•</button>
+          <button type="button" data-prefix="- [ ] " title="Checklist" aria-label="Checklist">☐</button>
+        </div>
+      </div>
+      <textarea id="input" aria-labelledby="in-label" spellcheck="true"
+        placeholder="**Titolo del post**&#10;&#10;Una riga con *corsivo* e ++sottolineato++.&#10;&#10;- primo punto&#10;- secondo punto&#10;&#10;#hashtag e link restano cliccabili"></textarea>
+      <div class="pane-foot">
+        <span>Markup: vedi la guida in fondo</span>
+        <button type="button" class="copy ghost" id="clear">Svuota</button>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="pane-head">
+        <h2>Pronto per LinkedIn</h2>
+        <button type="button" class="copy" id="copy-main">Copia testo</button>
+      </div>
+      <pre class="out" id="output" aria-live="polite"></pre>
+      <div class="pane-foot">
+        <span class="count" id="count">0 / 3000</span>
+        <button type="button" class="copy ghost" id="to-plain" title="Riconverte in testo semplice un testo già formattato incollato a sinistra">Togli formattazione</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="specimen" aria-labelledby="spec-title">
+    <h2 id="spec-title">Uno stile su tutto il testo</h2>
+    <p>Ogni riga applica lo stile al testo che hai scritto, ignorando il markup.</p>
+    <ul class="rows" id="rows"></ul>
+  </section>
+
+  <details>
+    <summary>Guida al markup</summary>
+    <div class="cheat">
+      <code>**testo**</code><span>grassetto (anche <code>__testo__</code>)</span>
+      <code>*testo*</code><span>corsivo (anche <code>_testo_</code>)</span>
+      <code>***testo***</code><span>grassetto corsivo</span>
+      <code>++testo++</code><span>sottolineato</span>
+      <code>~~testo~~</code><span>barrato</span>
+      <code>`testo`</code><span>monospazio</span>
+      <code># Titolo</code><span>riga in grassetto</span>
+      <code>- punto</code><span>elenco con •</span>
+      <code>- [ ] / - [x]</code><span>checklist ⬜ / ✅</span>
+      <code>&gt; citazione</code><span>▍ in corsivo</span>
+      <code>---</code><span>riga divisoria</span>
+    </div>
+    <p class="note">URL, #hashtag e @menzioni restano sempre in testo normale, anche dentro un grassetto: trasformati in Unicode smetterebbero di essere cliccabili. Il testo formattato non è indicizzato dalla ricerca di LinkedIn e i lettori di schermo lo leggono male, quindi usalo per pochi punti chiave.</p>
+    <p class="note">Puoi aprire l’app già compilata con un link del tipo <code>…/#text=testo%20codificato</code>: il testo dopo # non arriva mai al server.</p>
+  </details>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="formatter.js"></script>
+<script>
+(function () {
+  'use strict';
+  var F = window.LIFormat;
+  var $ = function (id) { return document.getElementById(id); };
+  var input = $('input'), output = $('output'), countEl = $('count'), rows = $('rows');
+  var family = 'sans';
+  var DRAFT_KEY = 'li-format:draft', FAMILY_KEY = 'li-format:family';
+  var SAMPLE = 'Il tuo testo qui';
+
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+
+  // Righe del campionario
+  F.STYLES.forEach(function (s) {
+    var li = document.createElement('li');
+    li.innerHTML = '<span class="name"></span><span class="sample"></span><button type="button" class="copy ghost">Copia</button>';
+    li.querySelector('.name').textContent = s.label;
+    li.querySelector('button').addEventListener('click', function (ev) {
+      copy(F.applyStyle(F.stripMarkup(input.value) || SAMPLE, s.id), ev.currentTarget);
+    });
+    li.dataset.style = s.id;
+    rows.appendChild(li);
+  });
+
+  function render() {
+    var src = input.value;
+    var out = F.fromMarkup(src, { family: family });
+    output.textContent = out;
+    var c = F.count(out);
+    var n = Math.max(c.codePoints, c.utf16);
+    countEl.textContent = (c.codePoints === c.utf16 ? c.codePoints : c.codePoints + '–' + c.utf16) + ' / ' + c.limit;
+    countEl.title = 'Caratteri: ' + c.codePoints + ' (unità UTF-16: ' + c.utf16 + '). Non è documentato quale dei due conti LinkedIn.';
+    countEl.classList.toggle('over', n > c.limit);
+    var sample = F.stripMarkup(src) || SAMPLE;
+    rows.querySelectorAll('li').forEach(function (li) {
+      li.querySelector('.sample').textContent = F.applyStyle(sample, li.dataset.style);
+    });
+    store(DRAFT_KEY, src);
+  }
+
+  var toastTimer;
+  function toast(msg) {
+    var t = $('toast'); t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 1600);
+  }
+
+  function copy(text, btn) {
+    var done = function () {
+      if (btn) {
+        var old = btn.textContent; btn.textContent = 'Copiato'; btn.classList.add('done');
+        setTimeout(function () { btn.textContent = old; btn.classList.remove('done'); }, 1400);
+      }
+      toast('Testo copiato');
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text) && done(); });
+    } else if (fallbackCopy(text)) done();
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+    if (!ok) toast('Copia non riuscita: seleziona il testo a mano');
+    return ok;
+  }
+
+  // Toolbar: avvolge la selezione con i marcatori (o li inserisce vuoti)
+  function wrapSelection(mark) {
+    var s = input.selectionStart, e = input.selectionEnd, v = input.value;
+    var sel = v.slice(s, e);
+    var lead = sel.match(/^\s*/)[0], trail = sel.match(/\s*$/)[0];
+    var core = sel.slice(lead.length, sel.length - trail.length);
+    var before = v.slice(0, s + lead.length), after = v.slice(e - trail.length);
+    if (core && before.endsWith(mark) && after.startsWith(mark)) {
+      input.setRangeText(core, s + lead.length - mark.length, e - trail.length + mark.length, 'select');
+    } else {
+      input.setRangeText(lead + mark + core + mark + trail, s, e, 'select');
+      if (!core) { var p = s + mark.length; input.setSelectionRange(p, p); }
+      else input.setSelectionRange(s + lead.length + mark.length, s + lead.length + mark.length + core.length);
+    }
+    input.focus(); render();
+  }
+  function prefixLines(prefix) {
+    var v = input.value, s = input.selectionStart, e = input.selectionEnd;
+    var ls = v.lastIndexOf('\n', s - 1) + 1;
+    var le = v.indexOf('\n', e); if (le === -1) le = v.length;
+    var block = v.slice(ls, le).split('\n').map(function (l) {
+      return l.startsWith(prefix) ? l.slice(prefix.length) : prefix + l;
+    }).join('\n');
+    input.setRangeText(block, ls, le, 'select'); input.focus(); render();
+  }
+  document.querySelectorAll('[data-wrap]').forEach(function (b) {
+    b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+    b.addEventListener('click', function () { wrapSelection(b.dataset.wrap); });
+  });
+  document.querySelectorAll('[data-prefix]').forEach(function (b) {
+    b.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+    b.addEventListener('click', function () { prefixLines(b.dataset.prefix); });
+  });
+  input.addEventListener('keydown', function (ev) {
+    if (!(ev.ctrlKey || ev.metaKey) || ev.altKey) return;
+    var map = { b: '**', i: '*', u: '++' };
+    var k = ev.key.toLowerCase();
+    if (map[k]) { ev.preventDefault(); wrapSelection(map[k]); }
+  });
+
+  document.querySelectorAll('[data-family]').forEach(function (b) {
+    b.addEventListener('click', function () { setFamily(b.dataset.family); });
+  });
+  function setFamily(f) {
+    family = f === 'serif' ? 'serif' : 'sans';
+    document.querySelectorAll('[data-family]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.family === family));
+    });
+    store(FAMILY_KEY, family); render();
+  }
+
+  $('copy-main').addEventListener('click', function (ev) {
+    if (!output.textContent) { toast('Scrivi qualcosa prima di copiare'); return; }
+    copy(output.textContent, ev.currentTarget);
+  });
+  $('clear').addEventListener('click', function () { input.value = ''; render(); input.focus(); });
+  $('to-plain').addEventListener('click', function () { input.value = F.toPlain(input.value); render(); });
+  input.addEventListener('input', render);
+
+  // Precompilazione: #text=… (preferito, non va al server) oppure ?text=… (Web Share Target)
+  function incoming() {
+    var h = new URLSearchParams(location.hash.slice(1));
+    var q = new URLSearchParams(location.search);
+    var parts = [h.get('text') || q.get('text'), q.get('title'), q.get('url')]
+      .filter(function (x) { return x; });
+    if (!parts.length) return null;
+    history.replaceState(null, '', location.pathname);
+    return parts.join('\n\n');
+  }
+
+  var shared = incoming();
+  input.value = shared !== null ? shared : (load(DRAFT_KEY) || '');
+  setFamily(load(FAMILY_KEY) || 'sans');
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+})();
+</script>
+</body>
+</html>
