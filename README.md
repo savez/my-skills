@@ -7,17 +7,10 @@
 **Skill, prompt e guide pronte all'uso per agenti AI.**
 Copia una cartella, e il tuo agente impara un mestiere nuovo.
 
-[![GitHub stars](https://img.shields.io/github/stars/savez/my-skills?style=flat&logo=github&color=yellow)](https://github.com/savez/my-skills/stargazers)
-[![Last commit](https://img.shields.io/github/last-commit/savez/my-skills?color=blue)](https://github.com/savez/my-skills/commits/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
-
-[![Skills](https://img.shields.io/badge/skills-2-8B5CF6)](#-skill)
-[![Prompt](https://img.shields.io/badge/prompt-3-F97316)](#-prompt)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-compatible-D97757?logo=anthropic&logoColor=white)](#claude-code)
 [![Hermes Agent](https://img.shields.io/badge/Hermes%20Agent-compatible-6E56CF)](#hermes-agent)
 [![Python](https://img.shields.io/badge/Python-stdlib%20only-3776AB?logo=python&logoColor=white)](skills/linkedin-formatter/scripts/linkedin_format.py)
-[![Made in Italy](https://img.shields.io/badge/made%20in-🇮🇹%20Italy-009246)](#)
 
 [Catalogo](#-catalogo) · [Installazione](#-installazione) · [Struttura](#-struttura) · [Contribuire](#-contribuire)
 
@@ -41,7 +34,7 @@ Niente dipendenze esotiche: dove c'è codice, usa solo la libreria standard.
 
 | Skill | Cosa fa | Agenti |
 |---|---|---|
-| [**linkedin-formatter**](skills/linkedin-formatter/) | Formatta i post LinkedIn con grassetto, corsivo, sottolineato, barrato ed elenchi tramite caratteri Unicode. Include una CLI Python (solo stdlib) e una PWA installabile e offline. | Hermes, Claude Code |
+| [**linkedin-formatter**](skills/linkedin-formatter/) | Formatta i post LinkedIn con grassetto, corsivo, sottolineato, barrato ed elenchi tramite caratteri Unicode. Include una CLI Python (solo stdlib). | Hermes, Claude Code |
 | [**llm-wiki-ingest**](skills/llm-wiki.md) | Gestisce un Second Brain secondo il pattern LLM-Wiki di Karpathy: ingestione di note e TO-DO, query sulla wiki, archiviazione e rotazione dei log. | Hermes (Telegram) |
 
 ### 💬 Prompt
@@ -114,7 +107,7 @@ Oggi parlo di 𝗨𝗻𝗶𝗰𝗼𝗱𝗲 e 𝘧𝘰𝘳𝘮𝘢𝘵𝘵𝘢�
 ```
 my-skills/
 ├── skills/                      # skill per agenti
-│   ├── linkedin-formatter/      #   SKILL.md + scripts/ + pwa/
+│   ├── linkedin-formatter/      #   SKILL.md + scripts/
 │   └── llm-wiki.md              #   skill a file singolo
 ├── prompts/                     # prompt per categoria
 │   ├── ai-agent/
